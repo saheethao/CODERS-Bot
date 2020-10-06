@@ -39,7 +39,7 @@ Additionally, in order to run the bot, it requires a config.json file one direct
 }
 ```
 
-### Some references
+## Some references
 * [Learning JavaScript](https://www.codecademy.com/learn/introduction-to-javascript)
 * [Running JavaScript Code in the Browser](https://playcode.io/empty/)
 * [JavaScript Documentation and Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
