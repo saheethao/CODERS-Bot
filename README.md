@@ -34,7 +34,7 @@ This bot uses Discord.js with Node.js.
 Additionally, in order to run the bot, it requires a config.json file one directory up (../this directory) with the following.
 ```json
 {
-	"prefix": "!",
+	"prefix": "bot.",
 	"token": "YOUR TOKEN HERE"
 }
 ```
