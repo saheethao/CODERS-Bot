@@ -1,5 +1,6 @@
 module.exports = {
 	name: 'hello', // Will be the command name. Example !hello...
+	aliases: [],
 	args: true,    // Required arguements
 	numArgs: 1,    // 1 arguement
 	usage: '<any>',// pattern for arguement. In this case only requires one arguement, which can be anything. Usage !hello <any>

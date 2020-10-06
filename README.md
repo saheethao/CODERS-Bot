@@ -44,3 +44,4 @@ Additionally, in order to run the bot, it requires a config.json file one direct
 * [Node.js](https://nodejs.org/en/)
 * [Discord.js](https://discord.js.org/)
 * [Discord.js Guide](https://discordjs.guide/)
+* [Discord Markdown](https://support.discord.com/hc/en-us/articles/210298617-Markdown-Text-101-Chat-Formatting-Bold-Italic-Underline-)

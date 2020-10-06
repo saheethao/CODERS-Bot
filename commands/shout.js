@@ -1,5 +1,6 @@
 module.exports = {
 	name: 'shout', // Will be the command name. Example !shout...
+	aliases: ['upper', 'yell', 'toupper', 'capitalize'], // other names
 	args: true, // Required arguements
 	numArgs: -1, // Unlimited arguements
 	usage: '<any> <any>...', // pattern for arguement. In this case we can have unlimited arguements

@@ -33,13 +33,13 @@ client.on('message', function(message) {
 
 	const args = message.content.slice(prefix.length).trim().split(/ +/);
 	const commandName = args.shift().toLowerCase();
-	
-	if (!client.commands.has(commandName)) {
+	const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+
+	if (!command) {
 		message.channel.send('Error: `' + commandName + '` is not a valid command.');
 		console.log('Recieved invalid commandName "' + commandName + '"');
 		return;
 	}
-	const command = client.commands.get(commandName);
 	
 	if (command.args) {
 		/* Command requires arguements */
