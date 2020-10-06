@@ -18,12 +18,12 @@ module.exports = {
 	lastModified: '10/05/20',   // The date when this file was last modified
 	version: '1.0.0',           // The current version of this command
 	execute(message, args) {
-	/* message is an message object. See https://discord.js.org/#/docs/main/master/class/Message */
-	/* args is a string array with the arguments. For example: ['hello', 'world'] */
+		/* message is an message object. See https://discord.js.org/#/docs/main/master/class/Message */
+		/* args is a string array with the arguments. For example: ['hello', 'world'] */
 		
-	/* Enter logic of command here */
+		/* Enter logic of command here */
 		
-	return 'Pong.';         // All commands end in a string to output to the channel
+		return 'Pong.';         // All commands end in a string to output to the channel
 	},
 };
 ```
