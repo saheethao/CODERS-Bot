@@ -6,9 +6,9 @@ module.exports = {
 	usage: '',    // Denotes no usage
 	description: 'Ping Pong!',
 	authors: ['Sahee Thao'],
-	lastModified: '10/05/20',
-	version: '1.0.0',
+	lastModified: '10/06/20',
+	version: '1.0.1',
 	execute(message, args) {
-		return message.channel.send('Pong.');
+		return 'Pong.';
 	},
 };

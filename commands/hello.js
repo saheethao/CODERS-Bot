@@ -6,9 +6,9 @@ module.exports = {
 	usage: '<any>',// pattern for arguement. In this case only requires one arguement, which can be anything. Usage !hello <any>
 	description: 'Says hello to something',
 	authors: ['Sahee Thao'],
-	lastModified: '10/05/20',
-	version: '1.0.0',
+	lastModified: '10/06/20',
+	version: '1.0.1',
 	execute(message, args) {
-		return message.channel.send('hello' + args[0]);
+		return 'hello ' + args[0];
 	},
 };

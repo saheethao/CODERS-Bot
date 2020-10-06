@@ -7,7 +7,7 @@ module.exports = {
 	description: 'Thesaurizes given text. Does not support text of the following nature <text><punctiotion><text> with no spaces between. Only the first text will be thesaurized.',
 	authors: ['Sahee Thao'],
 	lastModified: '10/06/20',
-	version: '1.1.0',
+	version: '1.1.2',
 	execute(message, args) {
 		var moby = require('moby')
 		var isAlpha = function(c) {
@@ -75,7 +75,6 @@ module.exports = {
 					return this.inWord;
 				}
 				var outWord = newWords[Math.floor(Math.random() * newWords.length)];
-				console.log(outWord);
 				if (outWord.split(' ').length > 1) {
 					outWord = outWord.split(' ');
 				}
@@ -100,10 +99,8 @@ module.exports = {
 						if (this.specialFormat[0] === 0) {
 							// capital
 							if (Array.isArray(outWord)) {
-								console.log('Capital Array');
 								return outWord.map(function(o){ return o.charAt(0).toUpperCase() + o.slice(1); }).join(' ');
 							} else {
-								console.log('Capital');
 								return outWord.charAt(0).toUpperCase() + outWord.slice(1);
 							}
 						} else if (this.specialFormat[0] === this.inWord.length - 1) {
@@ -281,7 +278,7 @@ module.exports = {
 		}
 		
 		
-		return message.channel.send(contents.join(' '));
+		return contents.join(' ');
 	},
 	
 };

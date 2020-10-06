@@ -30,15 +30,37 @@ client.once('ready', () => {
  */
 client.on('message', function(message) {
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
+	let content = pipeCommand(message);
+	
+	if (content == null) return;
+	message.channel.send(content);
+});
 
-	const args = message.content.slice(prefix.length).trim().split(/ +/);
+function pipeCommand(message) {
+	if (!message.content.startsWith(prefix) || message.author.bot) return null;	
+	let args = message.content.slice(prefix.length).trim().split(/ +/);
+	
+	console.log('args before: ' + args);
+	
+	let nextArgs = [];
+	let pipeFlag = false;
+	for (var i = 0; i < args.length; i++) {
+		if (args[i] === '->') {
+			pipeFlag = true;
+			nextArgs = args.slice(i+1);
+			args = args.slice(0, i);
+		}
+	}
+	
+	console.log('args after: ' + args);
+	console.log('next args: ' + nextArgs);
+
 	const commandName = args.shift().toLowerCase();
 	const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 	if (!command) {
-		message.channel.send('Error: `' + commandName + '` is not a valid command.');
 		console.log('Recieved invalid commandName "' + commandName + '"');
-		return;
+		return 'Error: `' + commandName + '` is not a valid command.';		
 	}
 	
 	if (command.args) {
@@ -46,14 +68,12 @@ client.on('message', function(message) {
 		if (command.numArgs < 0) {
 			/* Unlimited arguements */
 			if (args.length == 0) {
-				arguementError(message, command);
-				return;
+				return arguementError(message, command);
 			}
 		} else if (command.numArgs > 0) {
 			/* Limited Arguements */
 			if (args.length != command.numArgs) {
-				arguementError(message, command);
-				return;
+				return arguementError(message, command);
 			}
 		}
 	} else {
@@ -64,27 +84,38 @@ client.on('message', function(message) {
 		} else if (command.numArgs > 0) {
 			/* Limited Arguements */
 			if (args.length > command.numArgs) {
-				arguementError(message, command);
-				return;
+				return arguementError(message, command);
 			}
 		} else {
 			/* No Arguements */
 			if (args.length > 0) {
-				arguementError(message, command);
-				return;
+				return arguementError(message, command);
 			}
 		}
 	}
 	
 	try {
-		command.execute(message, args);
+		const content = command.execute(message, args);
 		console.log('Executed command "' + commandName + '"');
+		if (pipeFlag) {
+			for (var i = 0; i < nextArgs.length; i++) {
+				if (nextArgs[i] === '->') {
+					break;
+				}
+			}
+			nextArgs.splice(i, 0, content);
+			message.content = nextArgs.join(' ');
+			return pipeCommand(message);
+		} else {
+			return content;
+		}
 	} catch (error) {
 		console.error(error);
 		message.reply('there was an error trying to execute that command!');
 	}
-});
+}
 
+/* Display Errors */
 function arguementError(message, command) { 
 	let reply = 'Improper usage of `' + command.name + '`';
 	reply += '\nProper usage of ' + command.name + ': ' + '`' + prefix + '' + command.name;
@@ -93,50 +124,8 @@ function arguementError(message, command) {
 	} else {
 		reply += '`';
 	}
-	message.channel.send(reply);
+	return reply;
 }
 
-/*
 
-function messageHelp(message, command, args) {
-	if (args.length > 0) {
-		message.channel.send('ERROR: ' + commandStringFormat(command) + ' should have no arguements.');
-		return;
-	}
-	let content = 
-	'**Command Prefix**: `' + prefix + '`';
-	content += '\n**Commands**: ';
-	
-	for (var c of commandList) {
-		content += commandStringFormat(c) + ' ';
-	}
-	message.channel.send(content);
-}
-
-function messageInfo(message, command, args) {
-	if (args.length > 1 || args.length == 0) {
-		message.channel.send('ERROR: ' + commandStringFormat(command) + ' should have one arguement. The arguement should be a valid command.');
-		return;
-	}
-	var c = '';
-	for (c of commandList) {
-		if (c == args[0]) {
-			break;
-		}
-	}
-	if (c == '') {
-		message.channel.send('ERROR: ' + args[0] + ' is not a valid command. Use `help` to see valid commands.';
-		return;
-	}
-	
-	if (c == 'help') {
-		
-	}
-	
-}
-
-function commandStringFormat(c) {
-	return '`' + c + '`';
-}
-*/
 client.login(token);

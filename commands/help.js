@@ -7,7 +7,7 @@ module.exports = {
 	description: 'Use this command to receive list of commands',
 	authors: ['Sahee Thao'],
 	lastModified: '10/06/20',
-	version: '1.0.1',
+	version: '1.1.1',
 	execute(message, args) {
 		const { prefix } = require('../../config.json');
 		const client = message.client;
@@ -31,7 +31,7 @@ module.exports = {
 			content += 'Authors: `' + formatAuthors.join(' ') + '`\n';
 			content += 'Last Modified: `' + command.lastModified + '`\n';
 			content += 'Version: `' + command.version + '`';
-			return message.channel.send(content);
+			return content;
 		} else {
 			/* Is looking for list of all commands */
 			let content = '**Commands**: ';
@@ -43,9 +43,11 @@ module.exports = {
 		
 			content += commandArr.join(' ');
 			content += '\n\nUse `' + prefix + this.name + ' ' + this.usage + '` to find out more about a command.';
+			content += '\n\nPipe commands together using `->`. Output from one command is appended after the next command (and any arguements), but before another `->`.'
+			content += '\nExample `' + prefix + 'ping -> ' + prefix + 'hello -> ' + prefix + 'shout wow` results in `WOW HELLO PONG.`';
 			content += '\n\nSee more about the bot here: https://github.com/saheethao/CODERS-Bot';
 			
-			return message.channel.send(content);
+			return content;
 		}
 	},
 };

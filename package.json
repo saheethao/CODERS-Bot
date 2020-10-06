@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "datamuse": "^1.0.5",
     "discord": "^0.8.2",
     "moby": "^1.1.2"
   }

@@ -6,8 +6,8 @@ module.exports = {
 	usage: '<any> <any>...', // pattern for arguement. In this case we can have unlimited arguements
 	description: 'SHOUTS THE TEXT',
 	authors: ['Sahee Thao'],
-	lastModified: '10/05/20',
-	version: '1.0.0',
+	lastModified: '10/06/20',
+	version: '1.0.1',
 	execute(message, args) {
 		
 		// Assign upper to a function which takes a parameter x and returns x but uppercased
@@ -17,7 +17,7 @@ module.exports = {
 		
 		// Using map, for each element in args (an array), apply the upper function to the element.
 		args = args.map(upper);
-		return message.channel.send(args.join(' '));
+		return args.join(' ');
 	},
 	
 };
