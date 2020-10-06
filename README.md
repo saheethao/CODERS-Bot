@@ -1,16 +1,9 @@
 # CODERS-Bot
 Used for the CODERS Discord server.
 
-
-Requires a config.json file one directory out of this directory with the following.
-```json
-{
-	"prefix": "!",
-	"token": "YOUR TOKEN HERE"
-}
-```
-
 ## Adding a new command
+Before you proceed it worth noting, you should know basic programming and basic JavaScript to write a command. See the refrences below to get started, or if you are already experienced, it is a good place to get some references.
+
 Commands are added in the commands directory.
 
 They have the following format:
@@ -32,3 +25,22 @@ module.exports = {
 	},
 };
 ```
+
+## Running the bot
+This bot uses Discord.js with Node.js.
+
+Additionally, in order to run the bot, it requires a config.json file one directory up (../this directory) with the following.
+```json
+{
+	"prefix": "!",
+	"token": "YOUR TOKEN HERE"
+}
+```
+
+### Some references
+* [Learning JavaScript](https://www.codecademy.com/learn/introduction-to-javascript)
+* [Running JavaScript Code in the Browser](https://playcode.io/empty/)
+* [JavaScript Documentation and Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+* [Node.js](https://nodejs.org/en/)
+* [Discord.js](https://discord.js.org/)
+* [Discord.js Guide](https://discordjs.guide/)
