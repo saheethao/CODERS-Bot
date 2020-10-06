@@ -9,7 +9,7 @@ Commands are added in the commands directory.
 They have the following format:
 ```JavaScript
 module.exports = {
-	name: 'ping',        // Will be the command name.
+	name: 'ping',               // Will be the command name.
 	args: false,                // true means will require arguements, false means will NOT require arguements or may have optional arguements
 	numArgs: 0,                 // 0 means no arguements. -1 means unlimited arguements. If args is false and numArgs != 0, then these are optional arguements 
 	usage: '<string>',          // Denotes expected arguement usage. For example: "<number> <any>" or "<string> <integer> <number>"
