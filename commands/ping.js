@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'ping', // Will be the command name. Example !ping...
+	name: 'ping', // Will be the command name. Example bot.ping...
 	aliases: ['pong'],
 	args: false,  // Requires arguements
 	numArgs: 0,   // No arguements
