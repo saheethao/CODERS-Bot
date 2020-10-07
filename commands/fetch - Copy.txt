@@ -1,0 +1,31 @@
+module.exports = {
+	name: 'fetch',
+	aliases: ['last'],
+	args: false,
+	numArgs: 2,
+	usage: '<optional @nickname> <optional channel name>',
+	description: 'Outputs the last message (default the called channel), not including the given command. Optionally from a person or from a channel (or both)',
+	authors: ['Sahee Thao'],
+	lastModified: '10/06/20',
+	version: '1.0.0',
+	execute(message, args) {
+		var out = '';
+		if (args.length == 0) {
+			const channel = message.client.channels.cache.get(message.channel.id);
+			channel.messages.fetch({ limit: 2 }).then(msgs => {
+			console.log(`Received ${msgs.size} messages`);
+				//Iterate through the messages here with the variable "messages".
+				let i = 0;
+				msgs.forEach(function(msg) {
+					if (i == 1) {
+						console.log('Past content: ' + msg.content);
+						out = msg.content;
+					}
+					i++;
+				});
+				return out;
+			});
+		}
+		//return out;
+	},
+};

@@ -1,7 +1,45 @@
 /* Main file */
-
+/*
+ * Description: Initializes bot, db, and listens for commands. All logic handling basic command errors occur here.
+ *                  Command piping also occurs here.
+ * Version: 1.1.1
+ * Last Modified: 10/06/20
+ * Authors: Sahee Thao
+ */
 const fs = require('fs'); // File system
 const Discord = require('discord.js'); // Discord.js
+const Sequelize = require('sequelize'); // Sequalize
+
+const sequelize = new Sequelize('database', 'user', 'password', {
+	host: 'localhost',
+	dialect: 'sqlite',
+	logging: false,
+	// SQLite only
+	storage: 'database.sqlite',
+});
+
+/*
+ * equivalent to: CREATE TABLE tags(
+ * name VARCHAR(255),
+ * description TEXT,
+ * username VARCHAR(255),
+ * usage INT
+ * );
+ */
+const Tags = sequelize.define('tags', {
+	name: {
+		type: Sequelize.STRING,
+		unique: true,
+	},
+	description: Sequelize.TEXT,
+	username: Sequelize.STRING,
+	usage_count: {
+		type: Sequelize.INTEGER,
+		defaultValue: 0,
+		allowNull: false,
+	},
+});
+
 
 const { prefix, token } = require('../config.json');
 
@@ -18,6 +56,7 @@ for (const file of commandFiles) {
 }
 
 client.once('ready', () => {
+	Tags.sync();
 	console.log('State: Ready');
 });
 
@@ -29,32 +68,44 @@ client.once('ready', () => {
  * On 
  */
 client.on('message', function(message) {
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
-	let content = pipeCommand(message);
-	
-	if (content == null) return;
-	message.channel.send(content);
+	myFunction(message);
 });
 
-function pipeCommand(message) {
+async function myFunction(message) {
+	if (!message.content.startsWith(prefix) || message.author.bot) return;
+	let content = await pipeCommand(message);
+	
+	if (content == null || content == '') {
+		return;
+	}
+	message.channel.send(content);
+}
+
+async function pipeCommand(message) {
+	if (!message.content.startsWith(prefix)) {
+		return 'The prefix `' + prefix +'` is missing.';
+	}
 	if (!message.content.startsWith(prefix) || message.author.bot) return null;	
 	let args = message.content.slice(prefix.length).trim().split(/ +/);
-	
-	console.log('args before: ' + args);
-	
+		
 	let nextArgs = [];
 	let pipeFlag = false;
 	for (var i = 0; i < args.length; i++) {
 		if (args[i] === '->') {
 			pipeFlag = true;
 			nextArgs = args.slice(i+1);
+			if (i < args.length - 1) {
+				if (args[i+1] === '->') {
+					return 'Invalid use of piping.';
+				}
+			}
+			if (i == args.length - 1) {
+				return 'Missing next command to pipe.';
+			}
 			args = args.slice(0, i);
 		}
 	}
 	
-	console.log('args after: ' + args);
-	console.log('next args: ' + nextArgs);
-
 	const commandName = args.shift().toLowerCase();
 	const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
@@ -95,18 +146,33 @@ function pipeCommand(message) {
 	}
 	
 	try {
-		const content = command.execute(message, args);
+		let content = await command.execute(message, args);
 		console.log('Executed command "' + commandName + '"');
 		if (pipeFlag) {
 			for (var i = 0; i < nextArgs.length; i++) {
 				if (nextArgs[i] === '->') {
+					if (i < args.length - 1) {
+						if (args[i+1] === '->') {
+							return 'Invalid use of piping.';
+						}
+					}
+					
+					if (i == args.length - 1) {
+						return 'Missing next command to pipe.';
+					}
 					break;
 				}
 			}
+			if (command.name == 'fetch') {
+				let msgMap = Promise.resolve(content);
+			}
 			nextArgs.splice(i, 0, content);
-			message.content = nextArgs.join(' ');
-			return pipeCommand(message);
+			message.content = nextArgs.join(' '); // NOT SURE IF THIS IS PROPER
+			return await pipeCommand(message);
 		} else {
+			//content = Promise.resolve(content).then(function(value) { console.log('vType: ' + typeof value + ', vval: ' + value); return value; });
+			//console.log('Type: ' + typeof content + ', val: ' + content);
+			//console.log('hello!');
 			return content;
 		}
 	} catch (error) {
@@ -117,12 +183,12 @@ function pipeCommand(message) {
 
 /* Display Errors */
 function arguementError(message, command) { 
-	let reply = 'Improper usage of `' + command.name + '`';
+	let reply = 'Improper usage of `' + command.name + '`.';
 	reply += '\nProper usage of ' + command.name + ': ' + '`' + prefix + '' + command.name;
 	if (command.usage) {
-		reply += ' ' + command.usage + '`';
+		reply += ' ' + command.usage + '`.';
 	} else {
-		reply += '`';
+		reply += '`.';
 	}
 	return reply;
 }
