@@ -2,7 +2,7 @@
 Used for the CODERS Discord server.
 
 ## Adding a new command
-To write a command, you will have an easier time if you should know basic programming and basic JavaScript. See the refrences below to get started on JavaScript as well as other useful sources.
+To write a command, you should know some basic programming and basic JavaScript. See the refrences below to get started on JavaScript as well as other useful sources.
 
 Commands are added in the commands directory.
 
