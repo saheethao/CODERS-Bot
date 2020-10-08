@@ -18,6 +18,36 @@ const sequelize = new Sequelize('database', 'user', 'password', {
 	storage: 'database.sqlite',
 });
 
+var emojiDict = {
+	'gow': 'joe',
+	'chancellor': 'joe',
+	'sam': 'foley',
+	'parallel': 'foley',
+	'parallelism': 'foley',
+	'os': 'foley',
+	'ssfoley': 'foley',
+	'elliot': 'forbes',
+	'architecture': 'forbes',
+	'thomas': 'gendreau',
+	'kenny': 'hunt',
+	'sunglasses': 'hunt',
+	'john': 'maraist',
+	'david': 'mathias',
+	'genetic': 'mathias',
+	'woodworking': 'mathias',
+	'periyasamy': 'kasi',
+	'allie': 'asauppe',
+	'allison': 'asauppe',
+	'alley': 'asauppe',
+	'discrete': 'jsauppe',
+	'optimization': 'jsauppe',
+	'jason': 'jsauppe',
+	'json': 'jsauppe',
+	'lei': 'wang',
+	'yoshizomi': 'becky',
+	'mao': 'zheng'
+}
+
 /*
  * equivalent to: CREATE TABLE tags(
  * name VARCHAR(255),
@@ -72,7 +102,17 @@ client.on('message', function(message) {
 });
 
 async function myFunction(message) {
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
+	if (message.author.bot) {
+		return;
+	}
+	
+	if (!message.content.startsWith(prefix)) {
+		let passiveReply = passive(message);
+		if (passiveReply != null) {
+			message.channel.send(passiveReply);
+		}
+		return;
+	}
 	let content = await pipeCommand(message);
 	
 	if (content == null || content == '') {
@@ -191,6 +231,96 @@ function arguementError(message, command) {
 		reply += '`.';
 	}
 	return reply;
+}
+
+/* Message does not take in commands */
+function passive(message) {
+	console.log('heard: ' + message.content);
+	function isAlpha(c) {
+		return /^[A-Z]$/i.test(c);
+	}
+	let shouldSend = false;
+	let words = message.content;
+	
+	let newWords = '';
+	let w = '';
+	
+	let watchEmoji = 0;
+	
+	for (var i = 0; i < words.length; i++) {
+		var c = words.charAt(i);
+		if (c == '<' && i < words.length - 1) {
+			if (words.charAt(i+1) == ':') {
+				watchEmoji = 1;
+			}
+		}
+		
+		if (!isAlpha(c) && w != '') {
+			if (watchEmoji == 1 && c == ':') {
+				console.log('EMOJI DETECTED');
+				watchEmoji = 2;
+			}
+			let emoji = null;
+			if (message.guild == null) {
+				
+			} else {
+				let lookup = w.toLowerCase();
+				
+				const change = emojiDict[lookup];
+				if (change != null) {
+					lookup = change;
+				}
+				
+				emoji = message.guild.emojis.cache.find(e => e.name == lookup);
+			}
+			if (emoji == null || watchEmoji == 2) {
+				//console.log(w + ' => No emoji found');
+			} else {
+				let e = `<:${emoji.name}:${emoji.id}>`;
+				newWords += e;
+				shouldSend = true;
+			}
+			w = ''; // Reset w
+		} else {
+			if (isAlpha(c)) {
+				w += c;
+			}
+		}
+		newWords += c;
+	}
+	
+	if (w != '') {
+		if (watchEmoji == 1 && c == ':') {
+			console.log('EMOJI DETECTED');
+			watchEmoji = 2;
+		}
+		let emoji = null;
+		if (message.guild == null) {
+			
+		} else {
+			let lookup = w.toLowerCase();
+			
+			const change = emojiDict[lookup];
+			if (change != null) {
+				lookup = change;
+			}
+			
+			emoji = message.guild.emojis.cache.find(e => e.name == lookup);
+		}
+		if (emoji == null || watchEmoji == 2) {
+			//console.log(w + ' => No emoji found');
+		} else {
+			let e = `<:${emoji.name}:${emoji.id}>`;
+			newWords += e;
+			shouldSend = true;
+		}
+		w = ''; // Reset w
+	}
+	
+	if (shouldSend) {
+		return newWords;
+	}
+	return null;
 }
 
 

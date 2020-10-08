@@ -110,9 +110,11 @@ module.exports = {
 					return 'No Message Found';
 				}
 			} else {
-				console.log('channel time');
+				if (message.guild == null) {
+					return 'I cannot select a channel a direct message or a third party person.';
+				}
 				const channel = message.guild.channels.cache.find(channel => channel.name === args[0]);
-				if (channel == null) {
+				if (!message.guild.hasOwnProperty('channel')) {
 					return 'Channel ' + args[0] + ' was not found.';
 				}
 				if (channel.id != message.channel.id) {
@@ -126,7 +128,6 @@ module.exports = {
 						content = value.content;
 					});
 				} else {
-					console.log('wait its this channel');
 					let promise = await channel.messages.fetch({ limit: 2 });
 					promise = await Promise.resolve(promise).then(function(v) {
 						return v;
@@ -143,7 +144,9 @@ module.exports = {
 			if (user === -1) {
 				return 'User ' + args[0] + ' was not found.';
 			}
-			
+			if (message.guild == null) {
+				return 'I cannot select a channel a direct message or a third party person.';
+			}
 			const channel = message.guild.channels.cache.find(channel => channel.name === args[1]);
 			if (channel == null) {
 				return 'Channel ' + args[1] + ' was not found.';
