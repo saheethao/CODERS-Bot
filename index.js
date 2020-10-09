@@ -102,17 +102,17 @@ client.on('message', function(message) {
 });
 
 async function myFunction(message) {
-	if (message.author.bot) {
+	if (message.author.bot || !message.content.startsWith(prefix)) {
 		return;
 	}
 	
-	if (!message.content.startsWith(prefix)) {
-		let passiveReply = passive(message);
-		if (passiveReply != null) {
-			message.channel.send(passiveReply);
-		}
-		return;
-	}
+	//if (!message.content.startsWith(prefix)) {
+		//let passiveReply = passive(message);
+		//if (passiveReply != null) {
+			//message.channel.send(passiveReply);
+		//}
+		//return;
+	//}
 	let content = await pipeCommand(message);
 	
 	if (content == null || content == '') {
